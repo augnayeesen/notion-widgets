@@ -310,9 +310,10 @@
   </div>
 
   <script>
+    // Load saved preferences from localStorage
     let count = 0;
-    let isDarkMode = false;
-    let themeColor = '#3b82f6';
+    let isDarkMode = localStorage.getItem('bookCounterDarkMode') === 'true' || false;
+    let themeColor = localStorage.getItem('bookCounterThemeColor') || '#3b82f6';
 
     const body = document.body;
     const card = document.querySelector('.card');
@@ -326,6 +327,20 @@
     const colorPreview = document.getElementById('colorPreview');
     const divider = document.querySelector('.divider');
 
+    // Initialize with saved preferences
+    function initializePreferences() {
+      // Set the color input value to saved color
+      hexInput.value = themeColor;
+      
+      // Apply saved theme color
+      updateThemeColor(themeColor);
+      
+      // Apply saved dark mode if enabled
+      if (isDarkMode) {
+        applyDarkMode();
+      }
+    }
+
     function updateCount() {
       countNumber.textContent = count;
     }
@@ -337,61 +352,75 @@
       resetBtn.style.backgroundColor = color;
       colorPreview.style.backgroundColor = color;
       countNumber.style.color = color;
+      
+      // Save to localStorage
+      localStorage.setItem('bookCounterThemeColor', color);
+    }
+
+    function applyDarkMode() {
+      body.classList.remove('light-mode');
+      body.classList.add('dark-mode');
+      card.classList.remove('light-mode');
+      card.classList.add('dark-mode');
+      countDisplay.classList.remove('light-mode');
+      countDisplay.classList.add('dark-mode');
+      divider.classList.remove('light-mode');
+      divider.classList.add('dark-mode');
+      hexInput.classList.remove('light-mode');
+      hexInput.classList.add('dark-mode');
+      colorPreview.classList.remove('light-mode');
+      colorPreview.classList.add('dark-mode');
+      modeBtn.classList.remove('light-mode');
+      modeBtn.classList.add('dark-mode');
+      
+      modeBtn.innerHTML = `
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      `;
+    }
+
+    function applyLightMode() {
+      body.classList.remove('dark-mode');
+      body.classList.add('light-mode');
+      card.classList.remove('dark-mode');
+      card.classList.add('light-mode');
+      countDisplay.classList.remove('dark-mode');
+      countDisplay.classList.add('light-mode');
+      divider.classList.remove('dark-mode');
+      divider.classList.add('light-mode');
+      hexInput.classList.remove('dark-mode');
+      hexInput.classList.add('light-mode');
+      colorPreview.classList.remove('dark-mode');
+      colorPreview.classList.add('light-mode');
+      modeBtn.classList.remove('dark-mode');
+      modeBtn.classList.add('light-mode');
+      
+      modeBtn.innerHTML = `
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      `;
     }
 
     function toggleMode() {
       isDarkMode = !isDarkMode;
       
+      // Save to localStorage
+      localStorage.setItem('bookCounterDarkMode', isDarkMode);
+      
       if (isDarkMode) {
-        body.classList.remove('light-mode');
-        body.classList.add('dark-mode');
-        card.classList.remove('light-mode');
-        card.classList.add('dark-mode');
-        countDisplay.classList.remove('light-mode');
-        countDisplay.classList.add('dark-mode');
-        divider.classList.remove('light-mode');
-        divider.classList.add('dark-mode');
-        hexInput.classList.remove('light-mode');
-        hexInput.classList.add('dark-mode');
-        colorPreview.classList.remove('light-mode');
-        colorPreview.classList.add('dark-mode');
-        modeBtn.classList.remove('light-mode');
-        modeBtn.classList.add('dark-mode');
-        
-        modeBtn.innerHTML = `
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        `;
+        applyDarkMode();
       } else {
-        body.classList.remove('dark-mode');
-        body.classList.add('light-mode');
-        card.classList.remove('dark-mode');
-        card.classList.add('light-mode');
-        countDisplay.classList.remove('dark-mode');
-        countDisplay.classList.add('light-mode');
-        divider.classList.remove('dark-mode');
-        divider.classList.add('light-mode');
-        hexInput.classList.remove('dark-mode');
-        hexInput.classList.add('light-mode');
-        colorPreview.classList.remove('dark-mode');
-        colorPreview.classList.add('light-mode');
-        modeBtn.classList.remove('dark-mode');
-        modeBtn.classList.add('light-mode');
-        
-        modeBtn.innerHTML = `
-          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-        `;
+        applyLightMode();
       }
     }
 
@@ -419,6 +448,9 @@
         updateThemeColor(value);
       }
     });
+
+    // Initialize preferences on page load
+    initializePreferences();
   </script>
 </body>
 </html>
