@@ -311,7 +311,7 @@
 
   <script>
     // Load saved preferences from localStorage
-    let count = 0;
+    let count = parseInt(localStorage.getItem('bookCounterValue')) || 0;
     let isDarkMode = localStorage.getItem('bookCounterDarkMode') === 'true' || false;
     let themeColor = localStorage.getItem('bookCounterThemeColor') || '#3b82f6';
 
@@ -339,10 +339,15 @@
       if (isDarkMode) {
         applyDarkMode();
       }
+      
+      // Display saved count
+      updateCount();
     }
 
     function updateCount() {
       countNumber.textContent = count;
+      // Save count to localStorage
+      localStorage.setItem('bookCounterValue', count);
     }
 
     function updateThemeColor(color) {
