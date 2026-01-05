@@ -73,9 +73,16 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.2s ease;
-      color: white;
       font-size: 24px;
       font-weight: bold;
+    }
+
+    .btn.light-mode {
+      color: #ffffff;
+    }
+
+    .btn.dark-mode {
+      color: #000000;
     }
 
     .btn:hover {
@@ -256,7 +263,7 @@
     <h1>Book Count in 2026</h1>
 
     <div class="counter-container">
-      <button class="btn" id="decrementBtn" style="background-color: #3b82f6;">
+      <button class="btn light-mode" id="decrementBtn" style="background-color: #3b82f6;">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
@@ -266,7 +273,7 @@
         <span class="count-number" id="countNumber">0</span>
       </div>
 
-      <button class="btn" id="incrementBtn" style="background-color: #3b82f6;">
+      <button class="btn light-mode" id="incrementBtn" style="background-color: #3b82f6;">
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -421,6 +428,10 @@
       modeBtn.classList.add('dark-mode');
       resetBtn.classList.remove('light-mode');
       resetBtn.classList.add('dark-mode');
+      incrementBtn.classList.remove('light-mode');
+      incrementBtn.classList.add('dark-mode');
+      decrementBtn.classList.remove('light-mode');
+      decrementBtn.classList.add('dark-mode');
       
       modeBtn.innerHTML = `
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -446,6 +457,10 @@
       modeBtn.classList.add('light-mode');
       resetBtn.classList.remove('dark-mode');
       resetBtn.classList.add('light-mode');
+      incrementBtn.classList.remove('dark-mode');
+      incrementBtn.classList.add('light-mode');
+      decrementBtn.classList.remove('dark-mode');
+      decrementBtn.classList.add('light-mode');
       
       modeBtn.innerHTML = `
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
