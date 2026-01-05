@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Counter Widget</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      transition: background-color 0.3s ease;
+    }
+
+    body.light-mode {
+      background-color: #f5f5f5;
+    }
+
+    body.dark-mode {
+      background-color: #1a1a1a;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 448px;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .card.light-mode {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .card.dark-mode {
+      background-color: #2a2a2a;
+      color: #ffffff;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .counter-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      width: 56px;
+      height: 56px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      transform: scale(1.1);
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .count-display {
+      width: 96px;
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .count-display.light-mode {
+      background-color: #f0f0f0;
+    }
+
+    .count-display.dark-mode {
+      background-color: #3a3a3a;
+    }
+
+    .count-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    .divider {
+      height: 1px;
+      margin-bottom: 12px;
+      transition: background-color 0.3s ease;
+    }
+
+    .divider.light-mode {
+      background-color: #ddd;
+    }
+
+    .divider.dark-mode {
+      background-color: #444;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 12px;
+    }
+
+    .control-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .color-controls {
+      display: flex;
+      gap: 12px;
+    }
+
+    .input {
+      flex: 1;
+      height: 48px;
+      padding: 8px 12px;
+      border: 1px solid;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+    }
+
+    .input.light-mode {
+      border-color: #ddd;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .input.dark-mode {
+      border-color: #444;
+      background-color: #3a3a3a;
+      color: #ffffff;
+    }
+
+    .input:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    .color-preview {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      border: 2px solid;
+      transition: all 0.3s ease;
+    }
+
+    .color-preview.light-mode {
+      border-color: #ddd;
+    }
+
+    .color-preview.dark-mode {
+      border-color: #444;
+    }
+
+    .mode-btn {
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 1px solid;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .mode-btn.light-mode {
+      border-color: #ddd;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .mode-btn.dark-mode {
+      border-color: #444;
+      background-color: #3a3a3a;
+      color: #ffffff;
+    }
+
+    .mode-btn:hover {
+      opacity: 0.8;
+    }
+
+    .reset-btn {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      opacity: 0.9;
+    }
+
+    .reset-btn:hover {
+      opacity: 1;
+    }
+
+    .reset-btn:active {
+      transform: scale(0.98);
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+  </style>
+</head>
+<body class="light-mode">
+  <div class="card light-mode">
+    <h1>Book Count in 2026</h1>
+
+    <div class="counter-container">
+      <button class="btn" id="decrementBtn" style="background-color: #3b82f6;">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+
+      <div class="count-display light-mode" id="countDisplay">
+        <span class="count-number" id="countNumber">0</span>
+      </div>
+
+      <button class="btn" id="incrementBtn" style="background-color: #3b82f6;">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="divider light-mode"></div>
+
+    <div class="controls-grid">
+      <div class="control-group">
+        <label>Color Theme</label>
+        <div class="color-controls">
+          <input 
+            type="text" 
+            class="input light-mode" 
+            id="hexInput" 
+            value="#3b82f6" 
+            placeholder="#3b82f6"
+          />
+          <div class="color-preview light-mode" id="colorPreview" style="background-color: #3b82f6;"></div>
+          <button class="mode-btn light-mode" id="modeBtn">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Reset</label>
+        <button class="reset-btn" id="resetBtn" style="background-color: #3b82f6;">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let count = 0;
+    let isDarkMode = false;
+    let themeColor = '#3b82f6';
+
+    const body = document.body;
+    const card = document.querySelector('.card');
+    const countNumber = document.getElementById('countNumber');
+    const countDisplay = document.getElementById('countDisplay');
+    const incrementBtn = document.getElementById('incrementBtn');
+    const decrementBtn = document.getElementById('decrementBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const modeBtn = document.getElementById('modeBtn');
+    const hexInput = document.getElementById('hexInput');
+    const colorPreview = document.getElementById('colorPreview');
+    const divider = document.querySelector('.divider');
+
+    function updateCount() {
+      countNumber.textContent = count;
+    }
+
+    function updateThemeColor(color) {
+      themeColor = color;
+      incrementBtn.style.backgroundColor = color;
+      decrementBtn.style.backgroundColor = color;
+      resetBtn.style.backgroundColor = color;
+      colorPreview.style.backgroundColor = color;
+      countNumber.style.color = color;
+    }
+
+    function toggleMode() {
+      isDarkMode = !isDarkMode;
+      
+      if (isDarkMode) {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        card.classList.remove('light-mode');
+        card.classList.add('dark-mode');
+        countDisplay.classList.remove('light-mode');
+        countDisplay.classList.add('dark-mode');
+        divider.classList.remove('light-mode');
+        divider.classList.add('dark-mode');
+        hexInput.classList.remove('light-mode');
+        hexInput.classList.add('dark-mode');
+        colorPreview.classList.remove('light-mode');
+        colorPreview.classList.add('dark-mode');
+        modeBtn.classList.remove('light-mode');
+        modeBtn.classList.add('dark-mode');
+        
+        modeBtn.innerHTML = `
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        `;
+      } else {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        card.classList.remove('dark-mode');
+        card.classList.add('light-mode');
+        countDisplay.classList.remove('dark-mode');
+        countDisplay.classList.add('light-mode');
+        divider.classList.remove('dark-mode');
+        divider.classList.add('light-mode');
+        hexInput.classList.remove('dark-mode');
+        hexInput.classList.add('light-mode');
+        colorPreview.classList.remove('dark-mode');
+        colorPreview.classList.add('light-mode');
+        modeBtn.classList.remove('dark-mode');
+        modeBtn.classList.add('light-mode');
+        
+        modeBtn.innerHTML = `
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        `;
+      }
+    }
+
+    incrementBtn.addEventListener('click', () => {
+      count++;
+      updateCount();
+    });
+
+    decrementBtn.addEventListener('click', () => {
+      count--;
+      updateCount();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      count = 0;
+      updateCount();
+    });
+
+    modeBtn.addEventListener('click', toggleMode);
+
+    hexInput.addEventListener('input', (e) => {
+      const value = e.target.value;
+      
+      if (/^#([0-9A-F]{3}){1,2}([0-9A-F]{2})?$/i.test(value)) {
+        updateThemeColor(value);
+      }
+    });
+  </script>
+</body>
+</html>
