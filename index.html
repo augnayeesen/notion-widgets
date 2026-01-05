@@ -18,14 +18,15 @@
       justify-content: center;
       min-height: 100vh;
       transition: background-color 0.3s ease;
+      background-color: transparent;
     }
 
     body.light-mode {
-      background-color: #f5f5f5;
+      background-color: transparent;
     }
 
     body.dark-mode {
-      background-color: #1a1a1a;
+      background-color: transparent;
     }
 
     .card {
@@ -222,11 +223,18 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      color: white;
       font-size: 0.875rem;
       font-weight: 500;
       transition: all 0.3s ease;
       opacity: 0.9;
+    }
+
+    .reset-btn.light-mode {
+      color: #000000;
+    }
+
+    .reset-btn.dark-mode {
+      color: #ffffff;
     }
 
     .reset-btn:hover {
@@ -327,17 +335,51 @@
     const colorPreview = document.getElementById('colorPreview');
     const divider = document.querySelector('.divider');
 
+    // Check if user has saved preference, otherwise use system preference
+    function detectInitialTheme() {
+      const savedMode = localStorage.getItem('bookCounterDarkMode');
+      
+      if (savedMode !== null) {
+        // User has a saved preference
+        isDarkMode = savedMode === 'true';
+      } else {
+        // Use system/Notion preference
+        isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+    }
+
+    // Listen for system theme changes (when Notion changes theme)
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        // Only auto-switch if user hasn't manually set a preference
+        const savedMode = localStorage.getItem('bookCounterDarkMode');
+        if (savedMode === null) {
+          isDarkMode = e.matches;
+          if (isDarkMode) {
+            applyDarkMode();
+          } else {
+            applyLightMode();
+          }
+        }
+      });
+    }
+
     // Initialize with saved preferences
     function initializePreferences() {
+      // Detect theme preference
+      detectInitialTheme();
+      
       // Set the color input value to saved color
       hexInput.value = themeColor;
       
       // Apply saved theme color
       updateThemeColor(themeColor);
       
-      // Apply saved dark mode if enabled
+      // Apply dark mode if detected/saved
       if (isDarkMode) {
         applyDarkMode();
+      } else {
+        applyLightMode();
       }
       
       // Display saved count
@@ -377,6 +419,8 @@
       colorPreview.classList.add('dark-mode');
       modeBtn.classList.remove('light-mode');
       modeBtn.classList.add('dark-mode');
+      resetBtn.classList.remove('light-mode');
+      resetBtn.classList.add('dark-mode');
       
       modeBtn.innerHTML = `
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -400,6 +444,8 @@
       colorPreview.classList.add('light-mode');
       modeBtn.classList.remove('dark-mode');
       modeBtn.classList.add('light-mode');
+      resetBtn.classList.remove('dark-mode');
+      resetBtn.classList.add('light-mode');
       
       modeBtn.innerHTML = `
         <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
